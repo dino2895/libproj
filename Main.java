@@ -10,7 +10,7 @@ public class Main {
         }catch (Exception e){
             System.out.println("error to readfile");
             System.out.println("try to type \"java Main sampleInput\"");
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 }

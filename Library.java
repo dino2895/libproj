@@ -47,7 +47,7 @@ public class Library {
             book.setbook(bookid,scn.nextLine());
         }
         else{
-            System.out.println("user Permission denied");
+            System.out.println("Borrower can not add book");
             scn.nextLine();
         }
     }
@@ -62,63 +62,76 @@ public class Library {
             BookList.remove(del);
         }
         else{
-            System.out.println("user Permission denied");
+            System.out.println("Borrower can not remove book");
         }
     }
     private static void checkout(String suser,String user,Scanner scn){
         if(checkuser(suser)){
-            String sp[] = scn.nextLine().split(" ");
-            for(String id:sp){
-                for(Book book:BookList){
-                    if(book.getid()==Integer.parseInt(id)){
-                        book.setborrower(user);
-                        book.setavail(false);
+            if(checkborrow(user)){
+                for(User u:UserList){
+                    if(u.getUserName().equals(user))
+                        u.setBorrowNum(u.getBorrowNum()-1);
+                }
+                String sp[] = scn.nextLine().split(" ");
+                for(String id:sp){
+                    Book originbook = new Book();
+                    for(Book book:BookList){
+                        if(book.getid()==Integer.parseInt(id)){
+                            if(book.getavail()){
+                                originbook = book;
+                                book.setborrower(user);
+                                book.setavail(false);
+                                BookList.set(BookList.indexOf(originbook), book);
+                            }
+                            else{
+                                System.out.println("Can not check out since the book is checked out");
+                            }
+                        }
                     }
                 }
             }
+            else{
+                System.out.println("Can not check out since the number of books exceed the limitation of user can check-out");
+            }
         }
         else{
-            System.out.println("user Permission denied");
+            System.out.println("Borrower can not check out the books");
             scn.nextLine();
         }
         
     }
     private static void doreturn(String suser,String id){
         if(checkuser(suser)){
+            Book originbook = new Book();
             for(Book book:BookList){
-                if(book.getid()==Integer.parseInt(id)){
+                if(book.getid()==Integer.parseInt(id)&&book.getavail()&&book.getborrower().isBlank()){
+                    System.out.println("Can not return since the book isn't checked out");
+                }
+                else{
+                    originbook = book;
                     book.setborrower("");
                     book.setavail(true);
+                    BookList.set(BookList.indexOf(originbook), book);
                 }
             }
         }else{
-            System.out.println("user Permission denied");
+            System.out.println("Borrower can not return book");
         }
     }
     private static void listAuthor(String suser,String Author){
-        if(checkuser(suser)){
-            for(Book book:BookList){
-                if(book.getauthor().equals(Author)){
-                    book.print();
-                    writefile(book.printfile());
-                }
+        for(Book book:BookList){
+            if(book.getauthor().equals(Author)){
+                book.print();
+                writefile(book.printfile());
             }
-            // System.out.println("authorprint!");
-        }else{
-            System.out.println("user Permission denied");
         }
     }
     private static void listSubject(String suser,String Subject){
-        if(checkuser(suser)){
-            for(Book book:BookList){
-                if(book.getsubject().equals(Subject)){
-                    book.print();
-                    writefile(book.printfile());
-                }
+        for(Book book:BookList){
+            if(book.getsubject().equals(Subject)){
+                book.print();
+                writefile(book.printfile());
             }
-            // System.out.println("subjectprint!");
-        }else{
-            System.out.println("user Permission denied");
         }
     }
     private static void findChecked(String suser,String user){
@@ -132,7 +145,7 @@ public class Library {
             found.print();
             writefile(found.printfile());
         }else{
-            System.out.println("user Permission denied");
+            System.out.println("Borrower can not find books checked out by other users");
         }
     }
     private static void findBorrower(String suser,String id){
@@ -148,7 +161,7 @@ public class Library {
             writefile("User: "+found.getborrower());
             // System.out.println("findBorrowerprint!");
         }else{
-            System.out.println("user Permission denied");
+            System.out.println("Borrower can not find borrower");
         }
     }
     private static boolean checkuser(String checkuser){
@@ -156,6 +169,14 @@ public class Library {
             if(user.getUserName().equals(checkuser))
                 if(user.getUserType().equals("Staff"))
                     return true;
+        }
+        return false;
+    }
+    private static boolean checkborrow(String checkuser){
+        for(User user:UserList){
+            if(user.getBorrowNum()>0){
+                return true;
+            }
         }
         return false;
     }

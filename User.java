@@ -39,12 +39,7 @@ public class User {
         }
     }
     public void setBorrowNum(int BorrowNum){
-        if(BorrowNum<1){
-            System.out.println("borrorNumb not be 0 or less 0");
-        }
-        else{
-            this.BorrowNum = BorrowNum;
-        }
+        this.BorrowNum = BorrowNum;
     }
     public String getUserType(){
         return this.UserType;
