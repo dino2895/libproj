@@ -48,6 +48,7 @@ public class Library {
         }
         else{
             System.out.println("Borrower can not add book");
+            writefile("Borrower can not add book");
             scn.nextLine();
         }
     }
@@ -63,6 +64,7 @@ public class Library {
         }
         else{
             System.out.println("Borrower can not remove book");
+            writefile("Borrower can not remove book");
         }
     }
     private static void checkout(String suser,String user,Scanner scn){
@@ -85,6 +87,7 @@ public class Library {
                             }
                             else{
                                 System.out.println("Can not check out since the book is checked out");
+                                writefile("Can not check out since the book is checked out");
                             }
                         }
                     }
@@ -92,10 +95,12 @@ public class Library {
             }
             else{
                 System.out.println("Can not check out since the number of books exceed the limitation of user can check-out");
+                writefile("Can not check out since the number of books exceed the limitation of user can check-out");
             }
         }
         else{
             System.out.println("Borrower can not check out the books");
+            writefile("Borrower can not check out the books");
             scn.nextLine();
         }
         
@@ -106,6 +111,7 @@ public class Library {
             for(Book book:BookList){
                 if(book.getid()==Integer.parseInt(id)&&book.getavail()&&book.getborrower().isBlank()){
                     System.out.println("Can not return since the book isn't checked out");
+                    writefile("Can not return since the book isn't checked out");
                 }
                 else{
                     originbook = book;
@@ -116,6 +122,7 @@ public class Library {
             }
         }else{
             System.out.println("Borrower can not return book");
+            writefile("Borrower can not return book");
         }
     }
     private static void listAuthor(String suser,String Author){
@@ -146,6 +153,7 @@ public class Library {
             writefile(found.printfile());
         }else{
             System.out.println("Borrower can not find books checked out by other users");
+            writefile("Borrower can not find books checked out by other users");
         }
     }
     private static void findBorrower(String suser,String id){
@@ -162,6 +170,7 @@ public class Library {
             // System.out.println("findBorrowerprint!");
         }else{
             System.out.println("Borrower can not find borrower");
+            writefile("Borrower can not find borrower");
         }
     }
     private static boolean checkuser(String checkuser){
